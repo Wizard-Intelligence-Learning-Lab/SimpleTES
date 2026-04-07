@@ -38,15 +38,18 @@ export function Hero() {
   const buttonsRef = useRef<HTMLDivElement>(null);
   
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const autoPlayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const autoPlayResumeRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Auto-play carousel
   useEffect(() => {
     const startAutoPlay = () => {
       if (autoPlayRef.current) clearInterval(autoPlayRef.current);
       autoPlayRef.current = setInterval(() => {
+        setSlideDirection(1);
         setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
       }, 4000);
     };
@@ -67,6 +70,17 @@ export function Hero() {
     return stopAutoPlay;
   }, [isAutoPlaying, lightboxOpen]);
 
+  useEffect(() => {
+    return () => {
+      if (autoPlayRef.current) {
+        clearInterval(autoPlayRef.current);
+      }
+      if (autoPlayResumeRef.current) {
+        clearTimeout(autoPlayResumeRef.current);
+      }
+    };
+  }, []);
+
   // Slide transition animation
   useEffect(() => {
     if (carouselRef.current) {
@@ -75,27 +89,38 @@ export function Hero() {
         const isActive = index === currentSlide;
         gsap.to(slide, {
           opacity: isActive ? 1 : 0,
-          x: isActive ? 0 : (index < currentSlide ? -50 : 50),
+          x: isActive ? 0 : slideDirection * -50,
           scale: isActive ? 1 : 0.9,
           duration: 0.5,
           ease: 'power2.out',
         });
       });
     }
-  }, [currentSlide]);
+  }, [currentSlide, slideDirection]);
 
-  const goToSlide = useCallback((index: number) => {
-    setCurrentSlide(index);
+  const pauseAutoPlay = useCallback(() => {
     setIsAutoPlaying(false);
-    setTimeout(() => setIsAutoPlaying(true), 10000);
+    if (autoPlayResumeRef.current) {
+      clearTimeout(autoPlayResumeRef.current);
+    }
+    autoPlayResumeRef.current = setTimeout(() => {
+      setIsAutoPlaying(true);
+      autoPlayResumeRef.current = null;
+    }, 10000);
   }, []);
 
+  const goToSlide = useCallback((index: number, direction: 1 | -1 = 1) => {
+    setSlideDirection(direction);
+    setCurrentSlide(index);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
+
   const nextSlide = useCallback(() => {
-    goToSlide((currentSlide + 1) % carouselImages.length);
+    goToSlide((currentSlide + 1) % carouselImages.length, 1);
   }, [currentSlide, goToSlide]);
 
   const prevSlide = useCallback(() => {
-    goToSlide((currentSlide - 1 + carouselImages.length) % carouselImages.length);
+    goToSlide((currentSlide - 1 + carouselImages.length) % carouselImages.length, -1);
   }, [currentSlide, goToSlide]);
 
   const openLightbox = () => {
