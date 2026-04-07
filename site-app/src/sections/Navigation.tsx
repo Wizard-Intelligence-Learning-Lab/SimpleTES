@@ -17,7 +17,7 @@ export function Navigation() {
   }, []);
 
   useEffect(() => {
-    fetch('https://api.github.com/repos/luoqm6will/SimpleEvolve')
+    fetch('https://api.github.com/repos/Wizard-Intelligence-Learning-Lab/SimpleTES')
       .then(r => r.json())
       .then(d => {
         if (d.stargazers_count != null) setStars(String(d.stargazers_count));
@@ -48,7 +48,7 @@ export function Navigation() {
           {/* Logo */}
           <a href="#" className="flex items-center gap-2 group">
             <span className="font-semibold text-white group-hover:text-cyan-400 transition-colors">
-              SimpleEvolve
+              SimpleTES
             </span>
           </a>
 
@@ -69,7 +69,7 @@ export function Navigation() {
           <div className="hidden md:flex items-center gap-4">
             <div className="flex items-center gap-3 px-3 py-1.5 rounded-lg bg-cyan-500/5 border border-cyan-500/10">
               <a
-                href="https://github.com/luoqm6will/SimpleEvolve"
+                href="https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-cyan-400 transition-colors"
@@ -79,7 +79,7 @@ export function Navigation() {
               </a>
               <span className="text-slate-700">|</span>
               <a
-                href="https://github.com/luoqm6will/SimpleEvolve/fork"
+                href="https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES/fork"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-cyan-400 transition-colors"
@@ -94,7 +94,7 @@ export function Navigation() {
               asChild
             >
               <a
-                href="https://github.com/luoqm6will/SimpleEvolve"
+                href="https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES"
                 target="_blank"
                 rel="noopener noreferrer"
               >

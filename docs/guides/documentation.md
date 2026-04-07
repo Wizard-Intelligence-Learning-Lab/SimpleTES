@@ -1,6 +1,6 @@
-# SimpleEvolve
+# SimpleTES
 
-SimpleEvolve is a lightweight framework for evolving programs with Large Language Models. It combines inspiration sampling, prompt-based mutation, evaluator feedback, and checkpointing so teams can rapidly test program-improvement workflows without building a large serving stack first.
+SimpleTES is a lightweight framework for evolving programs with Large Language Models. It combines inspiration sampling, prompt-based mutation, evaluator feedback, and checkpointing so teams can rapidly test program-improvement workflows without building a large serving stack first.
 
 ## Reading Path
 

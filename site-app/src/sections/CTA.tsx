@@ -126,7 +126,7 @@ export function CTA() {
         <div className="cta-content">
           {/* Simple tagline */}
           <p className="text-slate-400 text-lg">
-            SimpleEvolve — Evolving code with Large Language Models
+            SimpleTES — Evolving code with Large Language Models
           </p>
           <p className="text-slate-500 text-sm mt-2">
             WILL Lab · 2026.4.5

@@ -4,8 +4,8 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
 
 const footerLinks = [
   { label: 'Docs', href: withBase('guides/documentation/'), icon: BookOpen },
-  { label: 'GitHub', href: 'https://github.com/luoqm6will/SimpleEvolve', icon: Github },
-  { label: 'Issues', href: 'https://github.com/luoqm6will/SimpleEvolve/issues', icon: MessageCircle },
+  { label: 'GitHub', href: 'https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES', icon: Github },
+  { label: 'Issues', href: 'https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES/issues', icon: MessageCircle },
 ];
 
 export function Footer() {
@@ -15,7 +15,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <a href="#" className="text-slate-300 hover:text-cyan-400 transition-colors">
-            SimpleEvolve
+            SimpleTES
           </a>
 
           {/* Links */}

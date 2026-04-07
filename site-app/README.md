@@ -1,4 +1,4 @@
-# SimpleEvolve Pages App
+# SimpleTES Pages App
 
 This directory contains the GitHub Pages frontend source.
 

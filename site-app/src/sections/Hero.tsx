@@ -8,7 +8,7 @@ const withBase = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^
 const resourceLinks = [
   { icon: BookOpen, label: 'Docs', href: withBase('guides/documentation/') },
   { icon: FileText, label: 'Paper', href: '#' },
-  { icon: Github, label: 'Code', href: 'https://github.com/luoqm6will/SimpleEvolve' },
+  { icon: Github, label: 'Code', href: 'https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES' },
 ];
 
 // Carousel images - can be replaced with actual solution images
@@ -34,7 +34,8 @@ export function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const carouselFrameRef = useRef<HTMLDivElement>(null);
+  const carouselViewportRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
   const previousSlideRef = useRef(0);
   
@@ -84,8 +85,8 @@ export function Hero() {
 
   // Slide transition animation
   useEffect(() => {
-    if (carouselRef.current) {
-      const slides = carouselRef.current.querySelectorAll('.carousel-slide');
+    if (carouselViewportRef.current) {
+      const slides = carouselViewportRef.current.querySelectorAll('.carousel-slide');
       const previousSlide = previousSlideRef.current;
       const incomingOffset = slideDirection === 1 ? 72 : -72;
       const outgoingOffset = -incomingOffset;
@@ -195,7 +196,7 @@ export function Hero() {
       );
 
       gsap.fromTo(
-        carouselRef.current,
+        carouselFrameRef.current,
         { scale: 0.8, opacity: 0 },
         { scale: 1, opacity: 1, duration: 1.2, ease: 'back.out(1.7)', delay: 0.1 }
       );
@@ -212,13 +213,13 @@ export function Hero() {
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!carouselRef.current || lightboxOpen) return;
+      if (!carouselViewportRef.current || lightboxOpen) return;
       const { clientX, clientY } = e;
       const { innerWidth, innerHeight } = window;
       const x = (clientX / innerWidth - 0.5) * 10;
       const y = (clientY / innerHeight - 0.5) * 10;
       
-      gsap.to(carouselRef.current, {
+      gsap.to(carouselViewportRef.current, {
         rotateY: x,
         rotateX: -y,
         duration: 0.5,
@@ -266,7 +267,7 @@ export function Hero() {
                 ref={titleRef}
                 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
               >
-                SimpleEvolve: Evolve Code with{' '}
+                SimpleTES: Evolve Code with{' '}
                 <span className="gradient-text">Large Language Models</span>
               </h1>
 
@@ -275,7 +276,7 @@ export function Hero() {
                 ref={subtitleRef}
                 className="text-lg text-slate-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
               >
-                SimpleEvolve is a lightweight framework for evolving programs with LLMs. 
+                SimpleTES is a lightweight framework for evolving programs with LLMs. 
                 Combine inspiration sampling, prompt-based mutation, and evaluator feedback 
                 to rapidly test program-improvement workflows.
               </p>
@@ -287,7 +288,7 @@ export function Hero() {
                   className="bg-cyan-500 text-black hover:bg-cyan-400 border-0 text-base px-8 font-bold"
                   asChild
                 >
-                  <a href="https://github.com/luoqm6will/SimpleEvolve" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES" target="_blank" rel="noopener noreferrer">
                     Get Started
                     <ArrowRight className="w-5 h-5 ml-2" />
                   </a>
@@ -324,84 +325,90 @@ export function Hero() {
           {/* Right: Image Carousel */}
           <div className="relative flex justify-center lg:justify-end lg:h-full" style={{ perspective: '1000px' }}>
             <div 
-              ref={carouselRef}
+              ref={carouselFrameRef}
               className="relative w-full max-w-md lg:flex lg:max-w-none lg:h-full"
-              style={{ transformStyle: 'preserve-3d' }}
             >
               {/* Glow effect behind carousel */}
               <div className="absolute inset-0 bg-cyan-500/20 rounded-[2rem] blur-3xl scale-75 animate-pulse-glow" />
               
               {/* Carousel container */}
               <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden border border-cyan-500/15 bg-gradient-to-b from-white/[0.06] via-black/70 to-black/90 shadow-[0_28px_90px_-42px_rgba(8,145,178,0.75)] group lg:flex-1 lg:min-h-[560px] lg:aspect-auto">
-                <div className="absolute inset-x-0 top-0 bottom-18 sm:bottom-20">
-                  {carouselImages.map((image, index) => (
+                <div className="grid h-full grid-rows-[minmax(0,1fr)_auto]">
+                  <div className="relative min-h-0 overflow-hidden">
                     <div
-                      key={index}
-                      className={`carousel-slide absolute inset-0 flex items-center justify-center px-6 py-6 sm:px-8 sm:py-8
-                        ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                      ref={carouselViewportRef}
+                      className="absolute inset-0"
+                      style={{ transformStyle: 'preserve-3d' }}
                     >
-                      <img
-                        src={image.src}
-                        alt={image.alt}
-                        className="h-full w-full object-contain animate-float cursor-pointer"
-                        onClick={openLightbox}
-                      />
+                      {carouselImages.map((image, index) => (
+                        <div
+                          key={index}
+                          className={`carousel-slide absolute inset-0 flex items-center justify-center px-6 py-6 sm:px-8 sm:py-8
+                            ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                        >
+                          <img
+                            src={image.src}
+                            alt={image.alt}
+                            className="h-full w-full object-contain animate-float cursor-pointer"
+                            onClick={openLightbox}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
 
-                  {/* Zoom indicator on hover */}
-                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    {/* Zoom control */}
+                    <div className="absolute right-4 top-4 z-20">
+                      <button
+                        type="button"
+                        onClick={openLightbox}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/65 px-3 py-2 text-xs text-white/90 backdrop-blur-sm transition-all duration-300 opacity-100 md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:group-focus-within:translate-y-0 md:group-focus-within:opacity-100 hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70 sm:px-4 sm:text-sm"
+                        aria-label="Open enlarged image view"
+                      >
+                        <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5" />
+                        <span>Click to enlarge</span>
+                      </button>
+                    </div>
+
+                    {/* Navigation arrows */}
                     <button
                       type="button"
-                      onClick={openLightbox}
-                      className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/65 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
-                      aria-label="Open enlarged image view"
+                      onClick={prevSlide}
+                      className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:left-4 sm:h-11 sm:w-11"
+                      aria-label="Previous slide"
                     >
-                      <ZoomIn className="h-5 w-5" />
-                      <span>Click to enlarge</span>
+                      <ChevronLeft className="h-5 w-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={nextSlide}
+                      className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:right-4 sm:h-11 sm:w-11"
+                      aria-label="Next slide"
+                    >
+                      <ChevronRight className="h-5 w-5" />
                     </button>
                   </div>
 
-                  {/* Navigation arrows */}
-                  <button
-                    type="button"
-                    onClick={prevSlide}
-                    className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:left-4 sm:h-11 sm:w-11"
-                    aria-label="Previous slide"
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={nextSlide}
-                    className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:right-4 sm:h-11 sm:w-11"
-                    aria-label="Next slide"
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </button>
-                </div>
-                
-                {/* Slide indicators */}
-                <div className="absolute bottom-14 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-16">
-                  {carouselImages.map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => goToSlide(index)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300
-                        ${index === currentSlide 
-                          ? 'w-6 bg-cyan-400' 
-                          : 'bg-white/30 hover:bg-white/50'
-                        }`}
-                      aria-label={`Go to slide ${index + 1}`}
-                    />
-                  ))}
-                </div>
-                
-                {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 z-10 p-4 bg-gradient-to-t from-black via-black/85 to-transparent">
-                  <p className="text-center text-sm text-slate-300">
-                    {carouselImages[currentSlide].caption}
-                  </p>
+                  <div className="relative z-10 border-t border-white/8 bg-black/55 px-4 pb-4 pt-3 backdrop-blur-sm sm:px-5 sm:pb-5">
+                    <div className="mb-3 flex justify-center gap-2">
+                      {carouselImages.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => goToSlide(index)}
+                          className={`w-2 h-2 rounded-full transition-all duration-300
+                         ${index === currentSlide 
+                           ? 'w-6 bg-cyan-400' 
+                           : 'bg-white/30 hover:bg-white/50'
+                          }`}
+                          aria-label={`Go to slide ${index + 1}`}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Caption */}
+                    <p className="text-center text-sm text-slate-300">
+                      {carouselImages[currentSlide].caption}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

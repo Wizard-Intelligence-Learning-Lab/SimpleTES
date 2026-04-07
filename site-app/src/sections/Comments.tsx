@@ -80,7 +80,7 @@ export function Comments() {
           </div>
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">What Researchers Say</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
-            Selected reactions from researchers and practitioners using SimpleEvolve 
+            Selected reactions from researchers and practitioners using SimpleTES 
             in their work.
           </p>
         </div>

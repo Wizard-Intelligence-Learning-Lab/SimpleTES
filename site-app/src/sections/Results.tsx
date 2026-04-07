@@ -23,12 +23,12 @@ const categories = [
         ours: 0.380867676,
         baseline: 0.380875326,
         comparator: 'Stanford TTT-Discover',
-        whyBetter: 'SimpleEvolve discovers a more optimal mass distribution pattern that reduces the maximum overlap by exploiting symmetry in the search space, achieving the best known result for this problem.',
+        whyBetter: 'SimpleTES discovers a more optimal mass distribution pattern that reduces the maximum overlap by exploiting symmetry in the search space, achieving the best known result for this problem.',
         methods: [
           { name: 'Stanford TTT-Discover', value: 0.380875326, color: '#64748b' },
           { name: 'MIRAI', value: 0.380891245, color: '#94a3b8' },
           { name: 'UCB EvoX', value: 0.380902134, color: '#94a3b8' },
-          { name: 'SimpleEvolve', value: 0.380867676, color: '#a855f7', isBest: true },
+          { name: 'SimpleTES', value: 0.380867676, color: '#a855f7', isBest: true },
         ],
       },
       {
@@ -45,7 +45,7 @@ const categories = [
           { name: 'MIRAI', value: 0.962580, color: '#64748b' },
           { name: 'Stanford TTT-Discover', value: 0.962512, color: '#94a3b8' },
           { name: 'UCB EvoX', value: 0.962445, color: '#94a3b8' },
-          { name: 'SimpleEvolve', value: 0.962651, color: '#a855f7', isBest: true },
+          { name: 'SimpleTES', value: 0.962651, color: '#a855f7', isBest: true },
         ],
       },
       {
@@ -57,12 +57,12 @@ const categories = [
         ours: 1.453750,
         baseline: 1.455800,
         comparator: 'UCB EvoX',
-        whyBetter: 'SimpleEvolve discovers sequences with suppressed third-order interference through guided mutation and selection, achieving lower autoconvolution peaks than prior methods.',
+        whyBetter: 'SimpleTES discovers sequences with suppressed third-order interference through guided mutation and selection, achieving lower autoconvolution peaks than prior methods.',
         methods: [
           { name: 'UCB EvoX', value: 1.455800, color: '#64748b' },
           { name: 'MIRAI', value: 1.456234, color: '#94a3b8' },
           { name: 'Stanford TTT-Discover', value: 1.456789, color: '#94a3b8' },
-          { name: 'SimpleEvolve', value: 1.453750, color: '#a855f7', isBest: true },
+          { name: 'SimpleTES', value: 1.453750, color: '#a855f7', isBest: true },
         ],
       },
     ],
@@ -84,10 +84,10 @@ const categories = [
         unit: '%',
         winTieLoss: '56/10/6',
         totalCases: 72,
-        whyBetter: 'SimpleEvolve evolves routing strategies that better exploit circuit structure and qubit connectivity patterns, reducing SWAP overhead by learning from successful routing patterns across diverse circuits.',
+        whyBetter: 'SimpleTES evolves routing strategies that better exploit circuit structure and qubit connectivity patterns, reducing SWAP overhead by learning from successful routing patterns across diverse circuits.',
         methods: [
           { name: 'SABRE', value: 0, color: '#64748b', isBaseline: true },
-          { name: 'SimpleEvolve', value: 17.8, color: '#3b82f6', isBest: true },
+          { name: 'SimpleTES', value: 17.8, color: '#3b82f6', isBest: true },
         ],
       },
       {
@@ -100,10 +100,10 @@ const categories = [
         unit: '%',
         winTieLoss: '38/13/21',
         totalCases: 72,
-        whyBetter: 'Even against the optimized LightSABRE, SimpleEvolve finds novel routing heuristics that outperform on complex circuits with irregular connectivity, demonstrating strong generalization.',
+        whyBetter: 'Even against the optimized LightSABRE, SimpleTES finds novel routing heuristics that outperform on complex circuits with irregular connectivity, demonstrating strong generalization.',
         methods: [
           { name: 'LightSABRE', value: 0, color: '#64748b', isBaseline: true },
-          { name: 'SimpleEvolve', value: 11.4, color: '#3b82f6', isBest: true },
+          { name: 'SimpleTES', value: 11.4, color: '#3b82f6', isBest: true },
         ],
       },
     ],
@@ -124,10 +124,10 @@ const categories = [
         ours: 0.70,
         baseline: 0.71,
         comparator: 'TTT-Discover',
-        whyBetter: 'SimpleEvolve achieves competitive denoising performance by evolving autoencoder architectures that balance noise removal with biological signal preservation, matching the competition winner.',
+        whyBetter: 'SimpleTES achieves competitive denoising performance by evolving autoencoder architectures that balance noise removal with biological signal preservation, matching the competition winner.',
         methods: [
           { name: 'TTT-Discover', value: 0.71, color: '#64748b', isBest: true },
-          { name: 'SimpleEvolve', value: 0.70, color: '#22c55e' },
+          { name: 'SimpleTES', value: 0.70, color: '#22c55e' },
           { name: 'Standard AE', value: 0.65, color: '#94a3b8' },
           { name: 'No Denoising', value: 0.52, color: '#94a3b8' },
         ],
@@ -141,10 +141,10 @@ const categories = [
         ours: 0.73,
         baseline: 0.73,
         comparator: 'TTT-Discover',
-        whyBetter: 'On this diverse multi-organ dataset, SimpleEvolve matches the best baseline while showing better cross-organ generalization, indicating robust learned denoising principles.',
+        whyBetter: 'On this diverse multi-organ dataset, SimpleTES matches the best baseline while showing better cross-organ generalization, indicating robust learned denoising principles.',
         methods: [
           { name: 'TTT-Discover', value: 0.73, color: '#22c55e', isBest: true },
-          { name: 'SimpleEvolve', value: 0.73, color: '#22c55e', isBest: true },
+          { name: 'SimpleTES', value: 0.73, color: '#22c55e', isBest: true },
           { name: 'Standard AE', value: 0.68, color: '#94a3b8' },
           { name: 'No Denoising', value: 0.55, color: '#94a3b8' },
         ],
@@ -167,11 +167,11 @@ const categories = [
         vsSklearn: 8.46,
         vsGlmnet: 2.92,
         highlight: 'RCV1 dataset',
-        whyBetter: 'SimpleEvolve discovers cache-efficient coordinate update patterns and convergence heuristics that significantly accelerate the pathwise optimization, especially on large-scale sparse datasets.',
+        whyBetter: 'SimpleTES discovers cache-efficient coordinate update patterns and convergence heuristics that significantly accelerate the pathwise optimization, especially on large-scale sparse datasets.',
         methods: [
           { name: 'sklearn', value: 1.0, color: '#64748b', isBaseline: true },
           { name: 'glmnet', value: 2.90, color: '#94a3b8' },
-          { name: 'SimpleEvolve', value: 8.46, color: '#f97316', isBest: true },
+          { name: 'SimpleTES', value: 8.46, color: '#f97316', isBest: true },
         ],
       },
       {
@@ -182,11 +182,11 @@ const categories = [
         metricDesc: 'GPU kernel execution speedup over reference implementation. Measured on A100 GPU.',
         vsRef: 9.2,
         geoMean: 1.075,
-        whyBetter: 'Through automated kernel optimization, SimpleEvolve discovers memory access patterns and thread block configurations that maximize GPU utilization for triangular matrix operations.',
+        whyBetter: 'Through automated kernel optimization, SimpleTES discovers memory access patterns and thread block configurations that maximize GPU utilization for triangular matrix operations.',
         methods: [
           { name: 'Reference', value: 1.0, color: '#64748b', isBaseline: true },
           { name: 'Optimized', value: 1.5, color: '#94a3b8' },
-          { name: 'SimpleEvolve', value: 9.2, color: '#f97316', isBest: true },
+          { name: 'SimpleTES', value: 9.2, color: '#f97316', isBest: true },
         ],
       },
     ],
@@ -505,7 +505,7 @@ export function Results() {
                           <div className="py-4 bg-gradient-to-r from-cyan-500/10 to-transparent rounded-lg px-4 border-l-2 border-cyan-500/50">
                             <h5 className="text-sm font-medium text-cyan-400 mb-2 flex items-center gap-2">
                               <Sparkles className="w-4 h-4" />
-                              Why SimpleEvolve Performs Better
+                              Why SimpleTES Performs Better
                             </h5>
                             <p className="text-sm text-slate-300 leading-relaxed">{task.whyBetter}</p>
                           </div>

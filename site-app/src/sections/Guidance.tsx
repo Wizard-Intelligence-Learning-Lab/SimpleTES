@@ -24,7 +24,7 @@ const guidanceItems = [
     icon: Github,
     title: 'Source Code',
     description: 'Browse the source code, scripts, datasets, and benchmark tasks on GitHub.',
-    href: 'https://github.com/luoqm6will/SimpleEvolve',
+    href: 'https://github.com/Wizard-Intelligence-Learning-Lab/SimpleTES',
   },
 ];
 
@@ -87,7 +87,7 @@ export function Guidance() {
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">Jump Right In</h2>
           <p className="text-slate-400 max-w-2xl mx-auto">
             Repo docs, quickstart guides, and report entry points for understanding 
-            what SimpleEvolve does and why it matters.
+            what SimpleTES does and why it matters.
           </p>
         </div>
 
