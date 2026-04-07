@@ -333,58 +333,56 @@ export function Hero() {
               
               {/* Carousel container */}
               <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden border border-cyan-500/15 bg-gradient-to-b from-white/[0.06] via-black/70 to-black/90 shadow-[0_28px_90px_-42px_rgba(8,145,178,0.75)] group lg:flex-1 lg:min-h-[560px] lg:aspect-auto">
-                {carouselImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className={`carousel-slide absolute inset-0 flex flex-col items-center justify-center p-6
-                      ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
-                  >
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="w-full h-full object-contain animate-float cursor-pointer"
+                <div className="absolute inset-x-0 top-0 bottom-18 sm:bottom-20">
+                  {carouselImages.map((image, index) => (
+                    <div
+                      key={index}
+                      className={`carousel-slide absolute inset-0 flex items-center justify-center px-6 py-6 sm:px-8 sm:py-8
+                        ${index === 0 ? 'opacity-100' : 'opacity-0'}`}
+                    >
+                      <img
+                        src={image.src}
+                        alt={image.alt}
+                        className="h-full w-full object-contain animate-float cursor-pointer"
+                        onClick={openLightbox}
+                      />
+                    </div>
+                  ))}
+
+                  {/* Zoom indicator on hover */}
+                  <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                    <button
+                      type="button"
                       onClick={openLightbox}
-                    />
+                      className="pointer-events-auto inline-flex items-center gap-2 rounded-full border border-white/20 bg-black/65 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all duration-300 hover:scale-[1.03] hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400/70"
+                      aria-label="Open enlarged image view"
+                    >
+                      <ZoomIn className="h-5 w-5" />
+                      <span>Click to enlarge</span>
+                    </button>
                   </div>
-                ))}
-                
-                {/* Zoom indicator on hover */}
-                <div 
-                  className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer z-5"
-                  onClick={openLightbox}
-                >
-                  <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-black/60 backdrop-blur-sm border border-white/20">
-                    <ZoomIn className="w-5 h-5 text-white" />
-                    <span className="text-sm text-white">Click to enlarge</span>
-                  </div>
+
+                  {/* Navigation arrows */}
+                  <button
+                    type="button"
+                    onClick={prevSlide}
+                    className="absolute left-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:left-4 sm:h-11 sm:w-11"
+                    aria-label="Previous slide"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={nextSlide}
+                    className="absolute right-3 top-1/2 z-20 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/65 text-white/75 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-black/85 hover:text-white sm:right-4 sm:h-11 sm:w-11"
+                    aria-label="Next slide"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
                 </div>
                 
-                {/* Navigation arrows */}
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
-                             bg-black/60 backdrop-blur-sm border border-white/20
-                             flex items-center justify-center
-                             text-white/70 hover:text-white hover:bg-black/80
-                             transition-all duration-300 z-10"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="w-5 h-5" />
-                </button>
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full 
-                             bg-black/60 backdrop-blur-sm border border-white/20
-                             flex items-center justify-center
-                             text-white/70 hover:text-white hover:bg-black/80
-                             transition-all duration-300 z-10"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="w-5 h-5" />
-                </button>
-                
                 {/* Slide indicators */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                <div className="absolute bottom-14 left-1/2 z-20 flex -translate-x-1/2 gap-2 sm:bottom-16">
                   {carouselImages.map((_, index) => (
                     <button
                       key={index}
@@ -400,7 +398,7 @@ export function Hero() {
                 </div>
                 
                 {/* Caption */}
-                <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <div className="absolute bottom-0 left-0 right-0 z-10 p-4 bg-gradient-to-t from-black via-black/85 to-transparent">
                   <p className="text-center text-sm text-slate-300">
                     {carouselImages[currentSlide].caption}
                   </p>
