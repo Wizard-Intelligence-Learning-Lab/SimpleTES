@@ -36,6 +36,7 @@ export function Hero() {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<HTMLDivElement>(null);
+  const previousSlideRef = useRef(0);
   
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slideDirection, setSlideDirection] = useState<1 | -1>(1);
@@ -85,16 +86,58 @@ export function Hero() {
   useEffect(() => {
     if (carouselRef.current) {
       const slides = carouselRef.current.querySelectorAll('.carousel-slide');
+      const previousSlide = previousSlideRef.current;
+      const incomingOffset = slideDirection === 1 ? 72 : -72;
+      const outgoingOffset = -incomingOffset;
+
       slides.forEach((slide, index) => {
-        const isActive = index === currentSlide;
-        gsap.to(slide, {
-          opacity: isActive ? 1 : 0,
-          x: isActive ? 0 : slideDirection * -50,
-          scale: isActive ? 1 : 0.9,
-          duration: 0.5,
+        gsap.killTweensOf(slide);
+
+        if (index !== currentSlide && index !== previousSlide) {
+          gsap.set(slide, {
+            opacity: 0,
+            x: incomingOffset,
+            scale: 0.94,
+            zIndex: 0,
+          });
+        }
+      });
+
+      if (previousSlide === currentSlide) {
+        gsap.set(slides[currentSlide], { opacity: 1, x: 0, scale: 1, zIndex: 2 });
+      } else {
+        gsap.set(slides[currentSlide], {
+          opacity: 0,
+          x: incomingOffset,
+          scale: 0.94,
+          zIndex: 2,
+        });
+
+        gsap.set(slides[previousSlide], {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          zIndex: 1,
+        });
+
+        gsap.to(slides[previousSlide], {
+          opacity: 0,
+          x: outgoingOffset,
+          scale: 0.94,
+          duration: 0.45,
+          ease: 'power2.inOut',
+        });
+
+        gsap.to(slides[currentSlide], {
+          opacity: 1,
+          x: 0,
+          scale: 1,
+          duration: 0.55,
           ease: 'power2.out',
         });
-      });
+      }
+
+      previousSlideRef.current = currentSlide;
     }
   }, [currentSlide, slideDirection]);
 
@@ -116,12 +159,16 @@ export function Hero() {
   }, [pauseAutoPlay]);
 
   const nextSlide = useCallback(() => {
-    goToSlide((currentSlide + 1) % carouselImages.length, 1);
-  }, [currentSlide, goToSlide]);
+    setSlideDirection(1);
+    setCurrentSlide((prev) => (prev + 1) % carouselImages.length);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
 
   const prevSlide = useCallback(() => {
-    goToSlide((currentSlide - 1 + carouselImages.length) % carouselImages.length, -1);
-  }, [currentSlide, goToSlide]);
+    setSlideDirection(-1);
+    setCurrentSlide((prev) => (prev - 1 + carouselImages.length) % carouselImages.length);
+    pauseAutoPlay();
+  }, [pauseAutoPlay]);
 
   const openLightbox = () => {
     setLightboxOpen(true);
@@ -212,10 +259,8 @@ export function Hero() {
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:items-stretch">
           {/* Left: Content */}
-          <div className="text-center lg:text-left lg:h-full">
-            <div className="relative flex h-full flex-col justify-center rounded-[2rem] border border-white/8 bg-white/[0.03] px-6 py-8 shadow-[0_24px_80px_-40px_rgba(6,182,212,0.45)] backdrop-blur-sm sm:px-8 lg:min-h-[560px] lg:px-10 lg:py-10">
-              <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
-
+          <div className="text-center lg:text-left lg:flex lg:min-h-[560px] lg:items-center">
+            <div className="w-full px-2 sm:px-4 lg:px-0">
               {/* Title */}
               <h1
                 ref={titleRef}
