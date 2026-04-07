@@ -27,7 +27,6 @@ theme:
     - content.code.annotate
 
 nav:
-  - Home: index.html
   - Documentation: guides/documentation.md
   - Getting Started:
     - Installation: guides/installation.md

@@ -1,25 +1,76 @@
-name: Deploy Docs
+name: Deploy Pages
 
 on:
   push:
     branches: [main, github_pages]
+    paths:
+      - "docs/**"
+      - "site-app/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+      - "scripts/merge-pages-artifact.mjs"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          python-version: 3.x
+          node-version: 20
+          cache: npm
+          cache-dependency-path: site-app/package-lock.json
 
-      - name: Install dependencies
+      - name: Install app dependencies
+        run: npm ci
+        working-directory: site-app
+
+      - name: Build landing page
+        run: npm run build:pages
+        working-directory: site-app
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install MkDocs dependencies
         run: pip install mkdocs-material
 
+      - name: Build documentation site
+        run: mkdocs build --clean --site-dir site
+
+      - name: Merge app build into Pages artifact
+        run: node scripts/merge-pages-artifact.mjs
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
-        run: mkdocs gh-deploy --force
+        id: deployment
+        uses: actions/deploy-pages@v4
