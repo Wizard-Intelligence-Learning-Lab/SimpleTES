@@ -210,51 +210,54 @@ export function Hero() {
       <div className="absolute inset-0 network-lines" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center lg:items-stretch">
           {/* Left: Content */}
-          <div className="text-center lg:text-left">
-            {/* Title */}
-            <h1
-              ref={titleRef}
-              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
-            >
-              SimpleEvolve: Evolve Code with{' '}
-              <span className="gradient-text">Large Language Models</span>
-            </h1>
+          <div className="text-center lg:text-left lg:h-full">
+            <div className="relative flex h-full flex-col justify-center rounded-[2rem] border border-white/8 bg-white/[0.03] px-6 py-8 shadow-[0_24px_80px_-40px_rgba(6,182,212,0.45)] backdrop-blur-sm sm:px-8 lg:min-h-[560px] lg:px-10 lg:py-10">
+              <div className="absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/40 to-transparent" />
 
-            {/* Subtitle */}
-            <p
-              ref={subtitleRef}
-              className="text-lg text-slate-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
-            >
-              SimpleEvolve is a lightweight framework for evolving programs with LLMs. 
-              Combine inspiration sampling, prompt-based mutation, and evaluator feedback 
-              to rapidly test program-improvement workflows.
-            </p>
-
-            {/* CTA Buttons */}
-            <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
-              <Button
-                size="lg"
-                className="bg-cyan-500 text-black hover:bg-cyan-400 border-0 text-base px-8 font-bold"
-                asChild
+              {/* Title */}
+              <h1
+                ref={titleRef}
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6"
               >
-                <a href="https://github.com/luoqm6will/SimpleEvolve" target="_blank" rel="noopener noreferrer">
-                  Get Started
-                  <ArrowRight className="w-5 h-5 ml-2" />
-                </a>
-              </Button>
-            </div>
+                SimpleEvolve: Evolve Code with{' '}
+                <span className="gradient-text">Large Language Models</span>
+              </h1>
 
-            {/* Resource Links */}
-            <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-              {resourceLinks.map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  target={link.href.startsWith('http') ? '_blank' : undefined}
-                  rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-                  className="group flex items-center gap-2 px-5 py-2.5 rounded-xl 
+              {/* Subtitle */}
+              <p
+                ref={subtitleRef}
+                className="text-lg text-slate-400 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed"
+              >
+                SimpleEvolve is a lightweight framework for evolving programs with LLMs. 
+                Combine inspiration sampling, prompt-based mutation, and evaluator feedback 
+                to rapidly test program-improvement workflows.
+              </p>
+
+              {/* CTA Buttons */}
+              <div ref={buttonsRef} className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-8">
+                <Button
+                  size="lg"
+                  className="bg-cyan-500 text-black hover:bg-cyan-400 border-0 text-base px-8 font-bold"
+                  asChild
+                >
+                  <a href="https://github.com/luoqm6will/SimpleEvolve" target="_blank" rel="noopener noreferrer">
+                    Get Started
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </a>
+                </Button>
+              </div>
+
+              {/* Resource Links */}
+              <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
+                {resourceLinks.map((link, index) => (
+                  <a
+                    key={index}
+                    href={link.href}
+                    target={link.href.startsWith('http') ? '_blank' : undefined}
+                    rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    className="group flex items-center gap-2 px-5 py-2.5 rounded-xl 
                              bg-gradient-to-b from-white/[0.08] to-white/[0.02]
                              border border-white/10 
                              hover:border-cyan-500/40 hover:from-cyan-500/15 hover:to-cyan-500/5
@@ -262,28 +265,29 @@ export function Hero() {
                              hover:shadow-[0_4px_16px_-4px_rgba(6,182,212,0.3)]
                              hover:-translate-y-0.5
                              transition-all duration-300 ease-out"
-                >
-                  <link.icon className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors duration-300" />
-                  <span className="text-sm font-medium text-slate-300 group-hover:text-cyan-300 transition-colors duration-300">
-                    {link.label}
-                  </span>
-                </a>
-              ))}
+                  >
+                    <link.icon className="w-4 h-4 text-slate-400 group-hover:text-cyan-400 transition-colors duration-300" />
+                    <span className="text-sm font-medium text-slate-300 group-hover:text-cyan-300 transition-colors duration-300">
+                      {link.label}
+                    </span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
           {/* Right: Image Carousel */}
-          <div className="relative flex justify-center lg:justify-end" style={{ perspective: '1000px' }}>
+          <div className="relative flex justify-center lg:justify-end lg:h-full" style={{ perspective: '1000px' }}>
             <div 
               ref={carouselRef}
-              className="relative w-full max-w-md lg:max-w-lg"
+              className="relative w-full max-w-md lg:flex lg:max-w-none lg:h-full"
               style={{ transformStyle: 'preserve-3d' }}
             >
               {/* Glow effect behind carousel */}
-              <div className="absolute inset-0 bg-cyan-500/20 rounded-2xl blur-3xl scale-75 animate-pulse-glow" />
+              <div className="absolute inset-0 bg-cyan-500/20 rounded-[2rem] blur-3xl scale-75 animate-pulse-glow" />
               
               {/* Carousel container */}
-              <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-black/50 border border-white/10 group">
+              <div className="relative aspect-[4/3] rounded-[2rem] overflow-hidden border border-cyan-500/15 bg-gradient-to-b from-white/[0.06] via-black/70 to-black/90 shadow-[0_28px_90px_-42px_rgba(8,145,178,0.75)] group lg:flex-1 lg:min-h-[560px] lg:aspect-auto">
                 {carouselImages.map((image, index) => (
                   <div
                     key={index}
