@@ -98,8 +98,12 @@ class CheckpointManager:
         os.makedirs(path, exist_ok=True)
 
         if best_code is not None:
-            self._atomic_write(os.path.join(path, "best_program.py"), best_code.encode("utf-8"))
-
+            ext = os.path.splitext(self.config.init_program or "")[1] or ".py"
+            self._atomic_write(
+                os.path.join(path, f"best_program{ext}"),
+                best_code.encode("utf-8"),
+            )
+            
         metadata_to_write = dict(metadata)
         if shared_construction_state and shared_construction_state.get("by_chain"):
             metadata_to_write["shared_constructions"] = {

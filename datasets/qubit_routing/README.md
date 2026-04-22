@@ -25,4 +25,4 @@ python main.py \
   --model <your-model>
 ```
 
-Score is `1 / mean(swap_overhead_ratio)` across the benchmark circuits; the evaluator reports per-circuit SWAP counts and validation results in the metrics dict.
+Score is total added CNOT count across the benchmark circuits averaged over three topologies; the evaluator reports per-circuit counts and validation results in the metrics dict.

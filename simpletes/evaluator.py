@@ -96,6 +96,7 @@ def main():
             sys.exit(1)
         
         mod = importlib.util.module_from_spec(spec)
+        sys.modules[spec.name] = mod
         spec.loader.exec_module(mod)
         
         # Run evaluation
@@ -126,11 +127,13 @@ class EvaluatorWorker:
         timeout: float = 300.0,
         *,
         python_executable: str | None = None,
+        target_filename: str = "program.py",
     ):
         self.instance_id = str(uuid.uuid4())[:8]
         self.timeout = timeout
         self.evaluator_path = os.path.abspath(evaluator_path)
         self.python_executable = os.path.abspath(python_executable) if python_executable else None
+        self.target_filename = target_filename or "program.py"
 
         if not os.path.exists(self.evaluator_path):
             raise ValueError(f"Evaluator module not found: {self.evaluator_path}")
@@ -177,7 +180,7 @@ class EvaluatorWorker:
         # Create unique subdirectory for this evaluation to isolate file operations
         eval_dir = os.path.join(TEMP_EVAL_DIR, f"eval_{self.instance_id}_{uuid.uuid4().hex}")
         os.makedirs(eval_dir, exist_ok=True)
-        filename = os.path.join(eval_dir, "program.py")
+        filename = os.path.join(eval_dir, self.target_filename)
         capture_path = os.path.join(eval_dir, "captured_construction.json")
         env = self._subprocess_env(capture_path, shared_construction_path)
 
