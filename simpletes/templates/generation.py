@@ -9,7 +9,7 @@ Score: {score}
 Metrics:
 {metrics_text}{reflection_block}
 Code:
-```python
+```{code_fence_tag}
 {code}
 ```
 """
@@ -24,18 +24,18 @@ GENERATION_PROMPT_TEMPLATE = """\
 Task: {instruction}
 
 Generation instruction (must follow exactly):
-1) Only the code between # EVOLVE-BLOCK-START and # EVOLVE-BLOCK-END is extracted.
+1) Only the code between `{start_marker_line}` and `{end_marker_line}` is extracted.
 2) The final program is reconstructed as EXACT_PREFIX + evolved_block + EXACT_SUFFIX.
 3) Keep marker lines exactly as written.
-4) Return one Python code block that includes both EVOLVE-BLOCK markers.
+4) Return one {language_name} code block that includes both EVOLVE-BLOCK markers.
 
 EXACT_PREFIX (kept unchanged):
-```python
+```{code_fence_tag}
 {prefix}
 ```
 
 EXACT_SUFFIX (kept unchanged):
-```python
+```{code_fence_tag}
 {suffix}
 ```
 {available_packages_text}

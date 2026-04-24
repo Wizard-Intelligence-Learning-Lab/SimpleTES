@@ -17,13 +17,15 @@ _INITIAL_SHARED_CONSTRUCTION_ENV = "SIMPLETES_INITIAL_SHARED_CONSTRUCTION_PATH"
 
 from datetime import datetime
 import asyncio
+from functools import lru_cache
+import importlib.util
 import os
 import signal
 import sys
 import traceback
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from rich.panel import Panel
 
@@ -78,7 +80,20 @@ class SimpleTESEngine(SchedulerMixin):
         # since policies have their own internal locks.
         self._counter_lock = asyncio.Lock()
         self._db_lock = asyncio.Lock()
-        
+
+        # Qubit-routing evaluator slot namespace/caching env.
+        self._qubit_routing_slot_workspace = None
+        if _is_qubit_routing_evaluator(config.evaluator_path):
+            slot_workspace_module = _load_qubit_routing_slot_workspace_module()
+            self._qubit_routing_slot_workspace = slot_workspace_module.QubitRoutingSlotWorkspace(
+                evaluator_path=config.evaluator_path,
+                instance_id=self.instance_id,
+                eval_concurrency=config.eval_concurrency,
+                eval_timeout=config.eval_timeout,
+                log_message=self._log,
+                printer=rich_print,
+            )
+
         # Load instruction
         with open(config.instruction_path, encoding="utf-8") as f:
             self.instruction = f.read()
@@ -87,6 +102,11 @@ class SimpleTESEngine(SchedulerMixin):
             config.evaluator_path,
             timeout=config.eval_timeout,
             python_executable=config.eval_python,
+            target_filename=(
+                f"program{Path(config.init_program).suffix}"
+                if Path(config.init_program).suffix
+                else "program.py"
+            ),
         )
 
         # Create policy
@@ -885,7 +905,12 @@ class SimpleTESEngine(SchedulerMixin):
                 loop.add_signal_handler(sig, lambda s=sig: handle_signal(s))
         except (ValueError, RuntimeError):
             pass
-        await self.runtime.run(self)
+
+        try:
+            await self.runtime.run(self)
+        finally:
+            if self._qubit_routing_slot_workspace is not None:
+                self._qubit_routing_slot_workspace.cleanup()
 
     # ---------- Checkpoint loading ----------
 
@@ -1000,3 +1025,35 @@ class SimpleTESEngine(SchedulerMixin):
         else:
             # Path is already the instance dir
             return resume_path
+
+
+# ============================================================================
+# Task-local helpers
+# ============================================================================
+
+@lru_cache(maxsize=1)
+def _load_qubit_routing_slot_workspace_module():
+    """Load the qubit-routing slot workspace helper from the dataset tree."""
+    module_path = Path(__file__).resolve().parents[2] / "datasets" / "qubit_routing" / "slot_workspace.py"
+    spec = importlib.util.spec_from_file_location(
+        "simpletes_qubit_routing_slot_workspace",
+        module_path,
+    )
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Could not load qubit-routing slot workspace helper: {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def _is_qubit_routing_evaluator(evaluator_path: str) -> bool:
+    """Return whether *evaluator_path* belongs to the built-in qubit-routing task."""
+    qubit_routing_root = (
+        Path(__file__).resolve().parents[2] / "datasets" / "qubit_routing"
+    ).resolve()
+    configured_evaluator = Path(evaluator_path).expanduser()
+    if not configured_evaluator.is_absolute():
+        configured_evaluator = (Path.cwd() / configured_evaluator).resolve()
+    else:
+        configured_evaluator = configured_evaluator.resolve()
+    return configured_evaluator.is_relative_to(qubit_routing_root)

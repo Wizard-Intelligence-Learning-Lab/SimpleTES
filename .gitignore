@@ -1,0 +1,54 @@
+# Python-generated files
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# macOS metadata
+.DS_Store
+
+# Local AI-assistant state
+.claude/
+
+# Virtual environments
+.venv/
+datasets/**/.venv*/
+datasets/**/venv/
+.vscode/
+run.sh
+.nfs*
+
+
+datasets/numerical_tasks/lasso_path/eigen/
+datasets/ahc/ale_bench/
+
+# Output
+checkpoints/
+debug_runs/
+
+# LLM keys
+keys
+
+# Local launcher profiles
+profiles/
+
+logs/
+notebooks/
+
+# Dataset cache (downloaded by setup.sh or scripts/prepare_task.py)
+datasets/open_problems_bio/openproblems/
+datasets/open_problems_bio/denoising/denoising_datasets/
+datasets/ahc/cache/
+datasets/numerical_tasks/eigen.tar.gz
+datasets/numerical_tasks/lasso_path/eval_data/
+datasets/scaling_law/.sldbench_cached
+datasets/scaling_law/*/dataset/
+datasets/qubit_routing/*/rust/.cargo_target/
+datasets/qubit_routing/*/rust/target/

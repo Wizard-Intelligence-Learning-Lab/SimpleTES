@@ -6,6 +6,7 @@ Handles LLM client lifecycle, prompt building, and code extraction.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, TYPE_CHECKING
 from collections.abc import Sequence
 
@@ -23,6 +24,29 @@ if TYPE_CHECKING:
     pass
 
 _PROMPT_ERROR_MAX_CHARS = 240
+_CODE_FENCE_TAG_BY_SUFFIX = {
+    ".py": "python",
+    ".rs": "rust",
+    ".js": "javascript",
+    ".ts": "typescript",
+    ".cpp": "cpp",
+    ".cc": "cpp",
+    ".cxx": "cpp",
+    ".c": "c",
+    ".java": "java",
+    ".go": "go",
+}
+_LANGUAGE_NAME_BY_FENCE_TAG = {
+    "python": "Python",
+    "rust": "Rust",
+    "javascript": "JavaScript",
+    "typescript": "TypeScript",
+    "cpp": "C++",
+    "c": "C",
+    "java": "Java",
+    "go": "Go",
+    "text": "text",
+}
 
 
 # ============================================================================
@@ -66,6 +90,7 @@ def format_inspiration(
     score: float | None,
     metrics: dict[str, Any] | None,
     reflection: str | None,
+    code_fence_tag: str,
 ) -> str:
     """Format a single inspiration using the template."""
     metrics_lines: list[str] = []
@@ -87,6 +112,7 @@ def format_inspiration(
         score=score,
         metrics_text="\n".join(metrics_lines),
         reflection_block=reflection_block,
+        code_fence_tag=code_fence_tag,
         code=code,
     )
 
@@ -143,8 +169,18 @@ class Generator:
         self._evolve_context = evolve_context
         self._available_packages = [pkg for pkg in (available_packages or []) if pkg]
         self._gen_id_counter: int = 0
+        self._code_fence_tag = self._resolve_code_fence_tag(config.init_program)
+        self._language_name = _LANGUAGE_NAME_BY_FENCE_TAG.get(
+            self._code_fence_tag,
+            self._code_fence_tag,
+        )
 
         self._llm: LLMBackend = create_llm_client(config)
+
+    @staticmethod
+    def _resolve_code_fence_tag(init_program_path: str) -> str:
+        suffix = Path(init_program_path).suffix.lower()
+        return _CODE_FENCE_TAG_BY_SUFFIX.get(suffix, "text")
 
     def close(self) -> None:
         """Clean up LLM resources."""
@@ -218,7 +254,14 @@ class Generator:
         # Format inspirations
         sorted_insps = sorted(inspirations, key=score_key, reverse=True)
         insp_chunks = [
-            format_inspiration(i, node.code, node.score, node.metrics, node.reflection)
+            format_inspiration(
+                i,
+                node.code,
+                node.score,
+                node.metrics,
+                node.reflection,
+                self._code_fence_tag,
+            )
             for i, node in enumerate(sorted_insps, 1)
         ]
         insp_text = "".join(insp_chunks)
@@ -261,14 +304,15 @@ class Generator:
             prompt = (
                 f"Task: {self._instruction}\n\n"
                 "Generation instruction (must follow exactly):\n"
-                "1) Only the code between # EVOLVE-BLOCK-START and # EVOLVE-BLOCK-END is extracted.\n"
+                f"1) Only the code between `{self._evolve_context.start_marker_line}` and "
+                f"`{self._evolve_context.end_marker_line}` is extracted.\n"
                 "2) The final program is reconstructed as EXACT_PREFIX + evolved_block + EXACT_SUFFIX.\n"
                 "3) Keep marker lines exactly as written.\n"
-                "4) Return one Python code block that includes both EVOLVE-BLOCK markers.\n\n"
+                f"4) Return one {self._language_name} code block that includes both EVOLVE-BLOCK markers.\n\n"
                 "EXACT_PREFIX (kept unchanged):\n"
-                f"```python\n{self._evolve_context.prefix.rstrip(chr(10))}\n```\n\n"
+                f"```{self._code_fence_tag}\n{self._evolve_context.prefix.rstrip(chr(10))}\n```\n\n"
                 "EXACT_SUFFIX (kept unchanged):\n"
-                f"```python\n{self._evolve_context.suffix.rstrip(chr(10))}\n```\n"
+                f"```{self._code_fence_tag}\n{self._evolve_context.suffix.rstrip(chr(10))}\n```\n"
                 f"{available_packages_text}\n"
                 f"{shared_construction_text}\n"
                 f"In-context inspirations (sorted by score, higher is better):\n{insp_text}\n"
@@ -279,6 +323,10 @@ class Generator:
         else:
             prompt = GENERATION_PROMPT_TEMPLATE.format(
                 instruction=self._instruction,
+                start_marker_line=self._evolve_context.start_marker_line,
+                end_marker_line=self._evolve_context.end_marker_line,
+                language_name=self._language_name,
+                code_fence_tag=self._code_fence_tag,
                 prefix=self._evolve_context.prefix.rstrip("\n"),
                 suffix=self._evolve_context.suffix.rstrip("\n"),
                 available_packages_text=available_packages_text + shared_construction_text,
